@@ -51,7 +51,7 @@ jobs:
     runs-on: windows-latest # For a list of available runner types, refer to
 
     env:
-      Solution_Name: NewArchProject.sln
+      Solution_Name: src/NewArchProject.sln
       Wap_Project_Directory: src/Console/NewArchProject
       Wap_Project_Path: src
 
