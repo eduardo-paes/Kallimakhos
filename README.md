@@ -2,6 +2,12 @@
 
 This is a C# program that creates a clean architecture project structure. It allows you to specify the project's name, location, and additional features like external services and UI types.
 
+<p align="center">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <img alt="Build" src="https://img.shields.io/badge/build-passing-brightgreen.svg">
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.1-orange.svg">
+</p>
+
 ## Table of Contents
 
 - [Clean Architecture Project Creator](#clean-architecture-project-creator)
