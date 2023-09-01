@@ -48,13 +48,11 @@ jobs:
       matrix:
         configuration: [Debug, Release]
 
-    runs-on:
-      windows-latest # For a list of available runner types, refer to
-      # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest # For a list of available runner types, refer to
 
     env:
-      Solution_Name: NewArchProject
-      Wap_Project_Directory: Console\NewArchProject
+      Solution_Name: NewArchProject.sln
+      Wap_Project_Directory: src/Console/NewArchProject
       Wap_Project_Path: src
 
     steps:
