@@ -41,8 +41,6 @@ name: .NET Core Desktop
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   build:
@@ -56,7 +54,7 @@ jobs:
 
     env:
       Solution_Name: NewArchProject
-      Wap_Project_Directory: Console/NewArchProject
+      Wap_Project_Directory: Console\NewArchProject
       Wap_Project_Path: src
 
     steps:
