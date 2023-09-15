@@ -1,0 +1,44 @@
+mkdir GerenciadorIR
+cd GerenciadorIR
+dotnet new sln
+
+dotnet new classlib -o Core/Domain
+rm Core/Domain/Class1.cs
+dotnet sln GerenciadorIR.sln add Core/Domain
+
+dotnet new classlib -o Core/Application
+rm Core/Application/Class1.cs
+dotnet sln GerenciadorIR.sln add Core/Application
+
+dotnet new classlib -o Infrastructure/Infrastructure
+rm Infrastructure/Infrastructure/Class1.cs
+dotnet sln GerenciadorIR.sln add Infrastructure/Infrastructure
+
+dotnet new classlib -o Infrastructure/Persistence
+rm Infrastructure/Persistence/Class1.cs
+dotnet sln GerenciadorIR.sln add Infrastructure/Persistence
+
+dotnet new classlib -o Infrastructure/IoC
+rm Infrastructure/IoC/Class1.cs
+dotnet sln GerenciadorIR.sln add Infrastructure/IoC
+
+dotnet new webapp -o Presentation/WebUI
+dotnet sln GerenciadorIR.sln add Presentation/WebUI
+
+dotnet add Core/Application/Application.csproj reference Core/Domain/Domain.csproj
+
+dotnet add Infrastructure/Infrastructure/Infrastructure.csproj reference Core/Application/Application.csproj
+
+dotnet add Infrastructure/IoC/IoC.csproj reference Core/Application/Application.csproj
+
+dotnet add Infrastructure/IoC/IoC.csproj reference Core/Domain/Domain.csproj
+
+dotnet add Infrastructure/IoC/IoC.csproj reference Infrastructure/Persistence/Persistence.csproj
+
+dotnet add Infrastructure/Persistence/Persistence.csproj reference Core/Application/Application.csproj
+
+dotnet add Presentation/WebUI/WebUI.csproj reference Infrastructure/IoC/IoC.csproj
+
+dotnet add Presentation/WebUI/WebUI.csproj reference Core/Application/Application.csproj
+
+dotnet build Presentation/WebUI/WebUI.csproj

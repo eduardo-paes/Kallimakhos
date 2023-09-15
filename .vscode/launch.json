@@ -11,11 +11,12 @@
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/src/Console/bin/Debug/net7.0/NewArchProject.dll",
             "args": [
-                "/Users/eduardo/Projects/Outros/NewArchProject/tests",
-                "TestProject",
+                "-np",
+                "/Users/eduardo/Projects/FRG",
+                "ContraCheque",
                 "-es",
                 "-ui",
-                "console"
+                "webapi"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
