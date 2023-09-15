@@ -31,7 +31,7 @@ To get started with this program, follow the instructions below:
 5. Run the program using the following command:
 
    ```bash
-   dotnet run <PATH> <PROJECT_NAME> [-es] [-ui <UI_TYPE>]
+   dotnet run -np <PATH> <PROJECT_NAME> [-es] [-ui <UI_TYPE>]
    ```
 
    Replace `<PATH>` with the path where you want to create the project, `<PROJECT_NAME>` with the desired project name, `-es` to add external services (optional), and `-ui <UI_TYPE>` to add a UI project (optional). Valid UI types include grpc, webapi, webapp, mvc, console, angular, and react.
@@ -43,25 +43,25 @@ Here are some examples of how to use the program:
 - Create a clean architecture project without external services or UI:
 
   ```bash
-  dotnet run /path/to/project MyProject
+  dotnet run -np /path/to/project MyProject
   ```
 
 - Create a clean architecture project with external services:
 
   ```bash
-  dotnet run /path/to/project MyProject -es
+  dotnet run -np /path/to/project MyProject -es
   ```
 
 - Create a clean architecture project with a Web API UI:
 
   ```bash
-  dotnet run /path/to/project MyProject -ui webapi
+  dotnet run -np /path/to/project MyProject -ui webapi
   ```
 
 - Create a clean architecture project with a React UI and external services:
 
   ```bash
-  dotnet run /path/to/project MyProject -es -ui react
+  dotnet run -np /path/to/project MyProject -es -ui react
   ```
 
 ## License
