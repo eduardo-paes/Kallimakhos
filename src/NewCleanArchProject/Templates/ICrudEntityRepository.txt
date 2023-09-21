@@ -1,0 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using {{YourNamespace}}.Base;
+using {{ProjectName}}.Domain.Entities;
+
+namespace {{YourNamespace}}
+{
+    public interface I{{EntityName}}Repository : ICrudRepository<{{EntityName}}, Guid>
+    {
+        // You can add custom repository methods specific to {{EntityName}} here
+    }
+}

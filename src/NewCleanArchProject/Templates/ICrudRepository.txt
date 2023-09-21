@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace {{YourNamespace}}
+{
+    public interface ICrudRepository<TEntity, TKey>
+        where TEntity : class
+    {
+        // Get a single entity by its primary key
+        Task<TEntity?> GetOneAsync(TKey id);
+
+        // Get multiple entities based on a predicate with optional pagination
+        Task<IEnumerable<TEntity>> GetManyAsync(Func<TEntity, bool> predicate, int skip = 0, int take = 10);
+
+        // Create a new entity
+        Task<TEntity> CreateAsync(TEntity entity);
+
+        // Update an existing entity
+        Task<TEntity> UpdateAsync(TEntity entity);
+
+        // Delete an entity by its primary key
+        Task<bool> DeleteAsync(TKey id);
+    }
+}

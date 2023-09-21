@@ -1,4 +1,4 @@
-namespace NewCleanArch.Interfaces
+namespace NewCleanArchProject.Interfaces
 {
     public interface ICreateProjectService
     {
