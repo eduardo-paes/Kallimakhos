@@ -1,0 +1,10 @@
+using System.Threading.Tasks;
+using {{PortNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public interface IReadMany{{EntityName}}UseCase
+    {
+        Task<IEnumerable<{{OutputName}}>> ExecuteAsync(int? skip, int? take);
+    }
+}

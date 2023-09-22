@@ -1,0 +1,35 @@
+using {{InterfaceNamespace}};
+using {{PortNamespace}};
+using {{RepositoryNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public class ReadOne{{EntityName}}UseCase : IReadOne{{EntityName}}UseCase
+    { 
+        private readonly I{{EntityName}}Repository _repository;
+
+        public ReadOne{{EntityName}}UseCase(I{{EntityName}}Repository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<{{OutputName}}> ExecuteAsync(Guid? id)
+        {
+            // Validate input
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            // ReadOne entity and add input data
+            var entity = await _repository.GetOneAsync((Guid)id) 
+                ?? throw new Exception($"{{EntityName}} with id {id} not found");
+
+            // Map entity to output
+            var output = new {{OutputName}}();
+
+            // Return output
+            return output;
+        }
+    }
+}

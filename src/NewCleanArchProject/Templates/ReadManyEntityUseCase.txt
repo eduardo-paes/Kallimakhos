@@ -1,0 +1,44 @@
+using {{InterfaceNamespace}};
+using {{PortNamespace}};
+using {{RepositoryNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public class ReadMany{{EntityName}}UseCase : IReadMany{{EntityName}}UseCase
+    { 
+        private readonly I{{EntityName}}Repository _repository;
+
+        public ReadMany{{EntityName}}UseCase(I{{EntityName}}Repository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<IEnumerable<{{OutputName}}>> ExecuteAsync(int? skip, int? take)
+        {
+            // Validate inputs
+            if (skip == null)
+            {
+                throw new ArgumentNullException(nameof(skip));
+            }
+            if (take == null)
+            {
+                throw new ArgumentNullException(nameof(skip));
+            }
+
+            // ReadMany entities
+            var entities = await _repository.GetManyAsync((int)skip, (int)take);
+
+            // Validate entities
+            if (entities.Count() == 0)
+            {
+                throw new Exception("Nothing found");
+            }
+
+            // Map entities to outputs
+            var outputs = new List<{{OutputName}}>();
+
+            // Return outputs
+            return outputs;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+namespace {{YourNamespace}} 
+{
+    public class {{Type}}ExceptionValidation : Exception
+    {
+        public {{Type}}ExceptionValidation(string error) : base(error) { }
+        public {{Type}}ExceptionValidation() : base() { }
+        public {{Type}}ExceptionValidation(string? message, Exception? innerException) : base(message, innerException) { }
+
+        public static void When(bool hasError, string error)
+        {
+            if (hasError)
+                throw new {{Type}}ExceptionValidation(error);
+        }
+    }
+}

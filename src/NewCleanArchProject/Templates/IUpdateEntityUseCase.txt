@@ -1,0 +1,10 @@
+using System.Threading.Tasks;
+using {{PortNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public interface IUpdate{{EntityName}}UseCase
+    {
+        Task<{{OutputName}}> ExecuteAsync({{InputName}} input);
+    }
+}

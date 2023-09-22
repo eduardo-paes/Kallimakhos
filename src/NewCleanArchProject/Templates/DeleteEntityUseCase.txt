@@ -1,0 +1,34 @@
+using {{InterfaceNamespace}};
+using {{PortNamespace}};
+using {{RepositoryNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public class Delete{{EntityName}}UseCase : IDelete{{EntityName}}UseCase
+    { 
+        private readonly I{{EntityName}}Repository _repository;
+
+        public Delete{{EntityName}}UseCase(I{{EntityName}}Repository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<{{OutputName}}> ExecuteAsync(Guid? id)
+        {
+            // Validate input
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            // Delete entity and add input data
+            var entity = await _repository.DeleteAsync((Guid)id);
+
+            // Map entity to output
+            var output = new {{OutputName}}();
+
+            // Return output
+            return output;
+        }
+    }
+}

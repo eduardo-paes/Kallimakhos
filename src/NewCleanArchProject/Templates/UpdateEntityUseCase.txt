@@ -1,0 +1,46 @@
+using {{InterfaceNamespace}};
+using {{PortNamespace}};
+using {{RepositoryNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public class Update{{EntityName}}UseCase : IUpdate{{EntityName}}UseCase
+    { 
+        private readonly I{{EntityName}}Repository _repository;
+
+        public Update{{EntityName}}UseCase(I{{EntityName}}Repository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<{{OutputName}}> ExecuteAsync({{InputName}} input)
+        {
+            // Validate input
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+            if (input.Id == null)
+            {
+                throw new ArgumentNullException(nameof(input.Id));
+            }
+
+            // Update entity and add input data
+            var entity = await _repository.GetOneAsync((Guid)input.Id) 
+                ?? throw new Exception($"{{EntityName}} with id {input.Id} not found");
+
+            // Update entity properties
+            // entity.Name = input.Name;
+            // ...
+
+            // Update entity
+            entity = await _repository.UpdateAsync(entity);
+
+            // Map entity to output
+            var output = new {{OutputName}}();
+
+            // Return output
+            return output;
+        }
+    }
+}

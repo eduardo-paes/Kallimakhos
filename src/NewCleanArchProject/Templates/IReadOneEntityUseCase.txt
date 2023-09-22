@@ -1,0 +1,10 @@
+using System.Threading.Tasks;
+using {{PortNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public interface IReadOne{{EntityName}}UseCase
+    {
+        Task<{{OutputName}}> ExecuteAsync(Guid? id);
+    }
+}

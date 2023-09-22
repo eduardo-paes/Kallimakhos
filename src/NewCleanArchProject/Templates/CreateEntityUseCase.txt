@@ -1,0 +1,37 @@
+using {{InterfaceNamespace}};
+using {{PortNamespace}};
+using {{RepositoryNamespace}};
+
+namespace {{YourNamespace}}
+{
+    public class Create{{EntityName}}UseCase : ICreate{{EntityName}}UseCase
+    { 
+        private readonly I{{EntityName}}Repository _repository;
+
+        public Create{{EntityName}}UseCase(I{{EntityName}}Repository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<{{OutputName}}> ExecuteAsync({{InputName}} input)
+        {
+            // Validate input
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
+            // Create entity and add input data
+            var entity = new Domain.Entities.{{EntityName}}();
+
+            // Create entity
+            entity = await _repository.CreateAsync(entity);
+
+            // Map entity to output
+            var output = new {{OutputName}}();
+
+            // Return output
+            return output;
+        }
+    }
+}

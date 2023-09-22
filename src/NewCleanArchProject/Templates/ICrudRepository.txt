@@ -11,7 +11,7 @@ namespace {{YourNamespace}}
         Task<TEntity?> GetOneAsync(TKey id);
 
         // Get multiple entities based on a predicate with optional pagination
-        Task<IEnumerable<TEntity>> GetManyAsync(Func<TEntity, bool> predicate, int skip = 0, int take = 10);
+        Task<IEnumerable<TEntity>> GetManyAsync(/*Func<TEntity, bool> predicate,*/ int skip = 0, int take = 10);
 
         // Create a new entity
         Task<TEntity> CreateAsync(TEntity entity);
@@ -20,6 +20,6 @@ namespace {{YourNamespace}}
         Task<TEntity> UpdateAsync(TEntity entity);
 
         // Delete an entity by its primary key
-        Task<bool> DeleteAsync(TKey id);
+        Task<TEntity> DeleteAsync(TKey id);
     }
 }

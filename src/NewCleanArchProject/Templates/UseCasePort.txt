@@ -5,13 +5,10 @@ using System.Threading.Tasks;
 
 namespace {{YourNamespace}}
 {
-    public class {{EntityName}}
+    public class {{PortName}}
     {
+        public Guid? Id { get; set; }
+        
         // Add your properties here
-
-        public {{EntityName}}()
-        {
-            // Add your constructor code here
-        }
     }
 }
