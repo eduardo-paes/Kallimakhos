@@ -6,14 +6,21 @@ namespace NewCleanArchProject.Services
 {
     public class CreateProjectService : ICreateProjectService
     {
+        #region Global Scope
         private readonly Settings _settings;
         private readonly string _currentPath;
+
+        #region DI References
+        private readonly Dictionary<string, string> _useCasesToDI = new();
+        private readonly Dictionary<string, string> _namespacesToDI = new();
+        #endregion
 
         public CreateProjectService(Settings settings)
         {
             _settings = settings;
             _currentPath = AppContext.BaseDirectory;
         }
+        #endregion
 
         /// <summary>
         /// Creates a new project.
@@ -45,9 +52,7 @@ namespace NewCleanArchProject.Services
 
             #endregion Project Initialization
 
-            #region Project Creation
-
-            #region Domain
+            #region Add Domain Layer
             // Generate domain project
             ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.Domain");
             ExecuteProcess("dotnet", $"sln {_settings.ProjectName}.sln add {_settings.ProjectName}.Domain");
@@ -187,7 +192,7 @@ namespace NewCleanArchProject.Services
 
             #endregion
 
-            #region Application
+            #region Add Application Layer
             // Generate application project
             ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.Application");
             ExecuteProcess("dotnet", $"sln {_settings.ProjectName}.sln add {_settings.ProjectName}.Application");
@@ -248,23 +253,46 @@ namespace NewCleanArchProject.Services
                     AddUseCaseTemplate(templateIReadMany, templateReadMany, templatePort, entityName, "ReadMany");
                 }
             }
+
+            // Add references
+            string domainProjet = $"{_settings.ProjectPath}/src/{_settings.ProjectName}.Domain/{_settings.ProjectName}.Domain.csproj";
+            string appProjet = $"{_settings.ProjectPath}/src/{_settings.ProjectName}.Application/{_settings.ProjectName}.Application.csproj";
+
+            // Add a reference from the domain project to the application project
+            ExecuteProcess("dotnet", $"add {appProjet} reference {domainProjet}");
             #endregion
 
-            #region Infrastructure
+            #region Add Infrastructure Layer
             // Change to the Infrastructure folder
             Directory.CreateDirectory($"{_settings.ProjectPath}/src/Infrastructure");
             Directory.SetCurrentDirectory($"{_settings.ProjectPath}/src/Infrastructure");
 
-            // Generate infrastructure (IoC) project
-            ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.IoC");
-            ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.IoC");
-            File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.IoC/Class1.cs");
+            // Generate IoC project path
+            string? iocProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.IoC/{_settings.ProjectName}.IoC.csproj";
 
-            // Generate infrastructure (Data) project
-            ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.Data");
-            ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.Data");
-            File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.Data/Class1.cs");
+            // Generate references for the projects path
+            string? dataProjet = null, externalServicesProjet = null, uiProject = null;
 
+            #region Add Data project
+            // If there is a database
+            if (_settings.HasDatabase)
+            {
+                // Generate infrastructure (Data) project
+                ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.Data");
+                ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.Data");
+                File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.Data/Class1.cs");
+
+                // Get data project path
+                dataProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.Data/{_settings.ProjectName}.Data.csproj";
+
+                // Add a reference from the domain project to the data project
+                ExecuteProcess("dotnet", $"add {dataProjet} reference {domainProjet}");
+
+                // TODO: Create context, mappings and repositories
+            }
+            #endregion
+
+            #region Add External Services project
             // If there are External Services
             if (_settings.HasExternalServices)
             {
@@ -272,8 +300,18 @@ namespace NewCleanArchProject.Services
                 ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.ExternalServices");
                 ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.ExternalServices");
                 File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.ExternalServices/Class1.cs");
-            }
 
+                // Get external services project path
+                externalServicesProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.ExternalServices/{_settings.ProjectName}.ExternalServices.csproj";
+
+                // Add a reference from the domain project to the infrastructure (ExternalServices) project
+                ExecuteProcess("dotnet", $"add {externalServicesProjet} reference {domainProjet}");
+
+                // TODO: Create services
+            }
+            #endregion
+
+            #region Add UI project
             // If there is UI
             if (_settings.TypeUI != null)
             {
@@ -294,59 +332,57 @@ namespace NewCleanArchProject.Services
                 ExecuteProcess("dotnet", $"new {_settings.TypeUI} -n {_settings.ProjectName}.{_settings.NameUI}");
                 ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.{_settings.NameUI}");
                 File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.{_settings.NameUI}/Class1.cs");
-            }
-            #endregion
 
-            #endregion Project Creation
-
-            #region Add References
-
-            // Path to projects
-            string domainProjet = $"{_settings.ProjectPath}/src/{_settings.ProjectName}.Domain/{_settings.ProjectName}.Domain.csproj";
-            string appProjet = $"{_settings.ProjectPath}/src/{_settings.ProjectName}.Application/{_settings.ProjectName}.Application.csproj";
-            string iocProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.IoC/{_settings.ProjectName}.IoC.csproj";
-            string dataProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.Data/{_settings.ProjectName}.Data.csproj";
-
-            // Add a reference from the domain project to the application project
-            ExecuteProcess("dotnet", $"add {appProjet} reference {domainProjet}");
-
-            // Add a reference from the domain project to the data project
-            ExecuteProcess("dotnet", $"add {dataProjet} reference {domainProjet}");
-
-            // Add a reference from the domain project to the infrastructure (IoC) project
-            ExecuteProcess("dotnet", $"add {iocProjet} reference {domainProjet}");
-
-            // Add a reference from the application project to the infrastructure (IoC) project
-            ExecuteProcess("dotnet", $"add {iocProjet} reference {appProjet}");
-
-            // Add a reference from the data project to the infrastructure (IoC) project
-            ExecuteProcess("dotnet", $"add {iocProjet} reference {dataProjet}");
-
-            // If there are External Services
-            if (_settings.HasExternalServices)
-            {
-                string externalServicesProjet = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.ExternalServices/{_settings.ProjectName}.ExternalServices.csproj";
-
-                // Add a reference from the domain project to the infrastructure (ExternalServices) project
-                ExecuteProcess("dotnet", $"add {externalServicesProjet} reference {domainProjet}");
-
-                // Add a reference from the external services project to the infrastructure (IoC) project
-                ExecuteProcess("dotnet", $"add {iocProjet} reference {externalServicesProjet}");
-            }
-
-            // If there is UI
-            if (_settings.TypeUI != null)
-            {
-                string uiProject = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.{_settings.NameUI}/{_settings.ProjectName}.{_settings.NameUI}.csproj";
+                // Get UI project path
+                uiProject = $"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.{_settings.NameUI}/{_settings.ProjectName}.{_settings.NameUI}.csproj";
 
                 // Add a reference from the application project to the infrastructure (UI) project
                 ExecuteProcess("dotnet", $"add {uiProject} reference {appProjet}");
+            }
+            #endregion
 
-                // Add a reference from the IoC project to the infrastructure (UI) project
-                ExecuteProcess("dotnet", $"add {uiProject} reference {iocProjet}");
+            #region Add IoC project
+            // Generate infrastructure (IoC) project
+            ExecuteProcess("dotnet", $"new classlib -n {_settings.ProjectName}.IoC");
+            ExecuteProcess("dotnet", $"sln ../{_settings.ProjectName}.sln add {_settings.ProjectName}.IoC");
+            File.Delete($"{_settings.ProjectPath}/src/Infrastructure/{_settings.ProjectName}.IoC/Class1.cs");
+
+            // Add a reference from the domain project to the infrastructure (IoC) project
+            if (!string.IsNullOrEmpty(domainProjet))
+            {
+                ExecuteProcess("dotnet", $"add {iocProjet} reference {domainProjet}");
+                // TODO: Add DI for the domain project
             }
 
-            #endregion Add References
+            // Add a reference from the application project to the infrastructure (IoC) project
+            if (!string.IsNullOrEmpty(appProjet))
+            {
+                ExecuteProcess("dotnet", $"add {iocProjet} reference {appProjet}");
+                // TODO: Add DI for the application project
+            }
+
+            // Add a reference from the data project to the infrastructure (IoC) project
+            if (!string.IsNullOrEmpty(dataProjet))
+            {
+                ExecuteProcess("dotnet", $"add {iocProjet} reference {dataProjet}");
+                // TODO: Add DI for the data project
+            }
+
+            // Add a reference from the external services project to the infrastructure (IoC) project
+            if (!string.IsNullOrEmpty(externalServicesProjet))
+            {
+                ExecuteProcess("dotnet", $"add {iocProjet} reference {externalServicesProjet}");
+                // TODO: Add DI for the external services project
+            }
+
+            // Add a reference from the UI project to the infrastructure (IoC) project
+            if (!string.IsNullOrEmpty(uiProject))
+            {
+                ExecuteProcess("dotnet", $"add {uiProject} reference {iocProjet}");
+            }
+            #endregion
+
+            #endregion
         }
 
         /// <summary>
@@ -375,6 +411,11 @@ namespace NewCleanArchProject.Services
             string pNamespace = $"{_settings.ProjectName}.Application.Ports.{entityName}";
             // string entityNamespace = $"{_settings.ProjectName}.Domain.Entities";
             string repositoryNamespace = $"{_settings.ProjectName}.Domain.Interfaces.Repositories";
+
+            // Add usecases, interfaces and its namespaces to be added to DI references in IoC project
+            _useCasesToDI.Add($"I{type}{entityName}UseCase", $"{type}{entityName}UseCase");
+            if (!_namespacesToDI.ContainsKey(iuNamespace))
+                _namespacesToDI.Add(iuNamespace, iuNamespace);
 
             #region Interface UseCase
             // Generate usecase template
