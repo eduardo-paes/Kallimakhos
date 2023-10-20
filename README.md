@@ -1,4 +1,5 @@
-# Clean Architecture Project Creator
+# Kallimakhos
+*Clean Architecture Project Creator*
 
 This is a C# program that creates a clean architecture project structure. It allows you to specify the project's name, location, and additional features like external services and UI types.
 
