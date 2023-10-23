@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\Kallimakhos.Application\Kallimakhos.Application.csproj" />
+    <ProjectReference Include="..\Kallimakhos.IoC\Kallimakhos.IoC.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,11 +12,5 @@
     <Nullable>enable</Nullable>
     <Version>0.0.1</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Update="Templates\*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
 </Project>

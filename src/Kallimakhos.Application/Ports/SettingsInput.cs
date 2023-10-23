@@ -1,6 +1,6 @@
-namespace NewCleanArchProject.Models
+namespace Kallimakhos.Application.Ports
 {
-    public class Settings
+    public class SettingsInput
     {
         #region Project
         /// <summary>
@@ -28,7 +28,7 @@ namespace NewCleanArchProject.Models
         /// <example>Payment</example>
         /// <example>Shipping</example>
         /// <example>...</example>
-        public string[]? NameServices { get; set; }
+        public string[]? ServiceNames { get; set; }
         #endregion
 
         #region User Interface
@@ -76,7 +76,7 @@ namespace NewCleanArchProject.Models
         /// <summary>
         /// Name of entities.
         /// </summary>
-        public string[]? NameEntities { get; set; }
+        public string[]? EntityNames { get; set; }
         #endregion
 
         #region CRUD
